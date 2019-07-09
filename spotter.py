@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 import pandas as pd
 
 UPLOAD_DIR = "local_uploads"
@@ -7,6 +8,7 @@ T_LEFT_MOST = "left_most"
 T_NON_NUM = "left_most_non-numeric"
 
 # The below two functions are copied from oeg-upm/ttla
+
 
 def get_numerics_from_list(nums_str_list):
     """
@@ -43,11 +45,13 @@ def get_num(num_or_str):
 
 def spot_subject_column(fname, technique):
     fdir = os.path.join(UPLOAD_DIR, fname)
+    col_id = -2
     if technique == T_LEFT_MOST:
-        return left_most(fdir)
+        col_id = left_most(fdir)
     elif technique == T_NON_NUM:
-        return left_most_non_numeric(fdir)
-    return 0
+        col_id = left_most_non_numeric(fdir)
+    os.remove(fdir)
+    return col_id
 
 
 def left_most(fdir):
@@ -57,8 +61,8 @@ def left_most(fdir):
 def left_most_non_numeric(fdir):
     df = pd.read_csv(fdir)
     headers = df.columns.values
-    print("headers: ")
-    print(headers)
+    # print("headers: ")
+    # print(headers)
     for idx, col_name in enumerate(headers):
         # col = df.columns.values[col_name]
         col = df[col_name]
