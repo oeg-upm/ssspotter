@@ -39,6 +39,12 @@ def spot():
             col_id = spot_subject_column(fname=fname, technique=technique)
             return jsonify(subject_col_id=col_id)
         else:
+            python_exec = ".venv/bin/python"
+            if not os.path.exists(python_exec):
+                python_exec = "python"
+            comm = """ %s spotter.py "%s" "%s" "%s" """ % (python_exec, fname, technique, callback_url)
+            print("comm: "+comm)
+            subprocess.Popen(comm, shell=True)
             return jsonify(msg="In progress, the callback url will be called once the subject column is identified")
 
 
