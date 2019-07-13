@@ -33,6 +33,9 @@ def spot():
         uploaded_file = request.files['table']
         technique = request.form['technique']
         callback_url = request.form['callback']
+        slice_idx = -1
+        if 'slice' in request.form:
+            slice_idx = request.form['slice_idx']
         fname = get_random()+".csv"
         uploaded_file.save(os.path.join('local_uploads', fname))
         if callback_url.strip()=="":
@@ -42,7 +45,7 @@ def spot():
             python_exec = ".venv/bin/python"
             if not os.path.exists(python_exec):
                 python_exec = "python"
-            comm = """ %s spotter.py "%s" "%s" "%s" """ % (python_exec, fname, technique, callback_url)
+            comm = """ %s spotter.py "%s" "%s" "%s" "%d" """ % (python_exec, fname, technique, callback_url, slice_idx)
             print("comm: "+comm)
             subprocess.Popen(comm, shell=True)
             return jsonify(msg="In progress, the callback url will be called once the subject column is identified")
