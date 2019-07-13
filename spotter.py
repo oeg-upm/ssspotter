@@ -88,6 +88,7 @@ if __name__ == "__main__":
             "subject_col_id": col_id,
             "slice": int(slice_idx),
             "total": int(total),
+            "table": fname,
         }
         r = requests.post(callback_url, data=reply)
         print("callback: %s, status: %d" % (callback_url, r.status_code))
