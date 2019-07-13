@@ -36,7 +36,7 @@ def spot():
         slice_idx = -1
         total = 1
         if 'slice' in request.form:
-            slice_idx = int(request.form['slice_idx'])
+            slice_idx = int(request.form['slice'])
         if 'total' in request.form:
             total = int(request.form['total'])
         ext = ".csv"
