@@ -42,6 +42,7 @@ def spot():
         ext = ".csv"
         if uploaded_file.filename[:-4] == ".tsv":
             ext = ".tsv"
+        tname = uploaded_file.filename
         fname = get_random()+ext
         uploaded_file.save(os.path.join('local_uploads', fname))
         if callback_url.strip()=="":
@@ -51,7 +52,7 @@ def spot():
             python_exec = ".venv/bin/python"
             if not os.path.exists(python_exec):
                 python_exec = "python"
-            comm = """ %s spotter.py "%s" "%s" "%s" "%d" "%d" """ % (python_exec, fname, technique, callback_url, slice_idx,
+            comm = """ %s spotter.py "%s" "%s" "%s" "%s" "%d" "%d" """ % (python_exec, tname, fname, technique, callback_url, slice_idx,
                                                                 total)
             print("comm: "+comm)
             subprocess.Popen(comm, shell=True)

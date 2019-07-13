@@ -81,14 +81,14 @@ def left_most_non_numeric(df):
 
 if __name__ == "__main__":
     print(len(sys.argv))
-    if len(sys.argv) == 6:
-        _, fname, technique, callback_url, slice_idx, total = sys.argv
+    if len(sys.argv) == 7:
+        _, tname, fname, technique, callback_url, slice_idx, total = sys.argv
         col_id = spot_subject_column(fname=fname, technique=technique)
         reply = {
             "subject_col_id": col_id,
             "slice": int(slice_idx),
             "total": int(total),
-            "table": fname,
+            "table": tname,
         }
         r = requests.post(callback_url, data=reply)
         print("callback: %s, status: %d" % (callback_url, r.status_code))
