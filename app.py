@@ -39,9 +39,10 @@ def spot():
             slice_idx = int(request.form['slice'])
         if 'total' in request.form:
             total = int(request.form['total'])
-        ext = ".csv"
         if uploaded_file.filename[-4:] == ".tsv":
             ext = ".tsv"
+        else:
+            ext = ".csv"
         tname = uploaded_file.filename
         fname = get_random()+ext
         uploaded_file.save(os.path.join('local_uploads', fname))
