@@ -40,7 +40,7 @@ def spot():
         if 'total' in request.form:
             total = int(request.form['total'])
         ext = ".csv"
-        if uploaded_file.filename[:-4] == ".tsv":
+        if uploaded_file.filename[-4:] == ".tsv":
             ext = ".tsv"
         tname = uploaded_file.filename
         fname = get_random()+ext
