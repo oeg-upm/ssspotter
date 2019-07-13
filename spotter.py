@@ -47,10 +47,15 @@ def get_num(num_or_str):
 def spot_subject_column(fname, technique):
     fdir = os.path.join(UPLOAD_DIR, fname)
     col_id = -2
+    if fname[-4:] == ".tsv":
+        sep = "\t"
+    else:
+        sep = ","
+    df = pd.read_csv(fdir, sep=sep)
     if technique == T_LEFT_MOST:
-        col_id = left_most(fdir)
+        col_id = left_most(df)
     elif technique == T_NON_NUM:
-        col_id = left_most_non_numeric(fdir)
+        col_id = left_most_non_numeric(df)
     os.remove(fdir)
     return col_id
 
@@ -59,8 +64,8 @@ def left_most(fdir):
     return 0
 
 
-def left_most_non_numeric(fdir):
-    df = pd.read_csv(fdir)
+def left_most_non_numeric(df):
+    # df = pd.read_csv(fdir)
     headers = df.columns.values
     # print("headers: ")
     # print(headers)

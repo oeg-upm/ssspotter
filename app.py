@@ -39,7 +39,10 @@ def spot():
             slice_idx = int(request.form['slice_idx'])
         if 'total' in request.form:
             total = int(request.form['total'])
-        fname = get_random()+".csv"
+        ext = ".csv"
+        if uploaded_file.filename[:-4] == ".tsv":
+            ext = ".tsv"
+        fname = get_random()+ext
         uploaded_file.save(os.path.join('local_uploads', fname))
         if callback_url.strip()=="":
             col_id = spot_subject_column(fname=fname, technique=technique)
