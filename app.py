@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 
 
-def get_random(size=4):
+def get_random(size=25):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(size))
 
