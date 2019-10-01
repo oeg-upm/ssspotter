@@ -20,4 +20,4 @@ Simple Subject Column Spotter
 #### Techniques
 * `left_most`: pick the left most column
 * `left_most_non`: pick the left most non-numeric column 
-
+* `most_distinct`: pick the most distinct non-numeric column with average length less than 4 characters (T2K)
