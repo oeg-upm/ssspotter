@@ -1,7 +1,7 @@
 from app import app
 import unittest
 import os
-from spotter import T_NON_NUM, T_LEFT_MOST
+from spotter import T_NON_NUM, T_LEFT_MOST, T_DISTINCT
 
 class TestSimpleSpotter(unittest.TestCase):
 
@@ -94,6 +94,30 @@ class TestSimpleSpotter(unittest.TestCase):
         self.assertTrue(result.is_json)
         j = result.get_json()
         self.assertEqual(j["subject_col_id"], -1)
+
+    def test_distinct_num_2(self):
+        fname = "sample_col_2.csv"
+        fdir = os.path.join("tests", fname)
+        f = open(fdir)
+        data = {'technique': T_DISTINCT, 'callback': ""}
+        data['table'] = (f, "sample.csv")
+        result = self.app.post('/spot', data=data, content_type='multipart/form-data')
+        self.assertEqual(result.status_code, 200, msg=result.data)
+        self.assertTrue(result.is_json)
+        j = result.get_json()
+        self.assertEqual(j["subject_col_id"], 2)
+
+    def test_distinct_num_3(self):
+        fname = "sample_col_3.csv"
+        fdir = os.path.join("tests", fname)
+        f = open(fdir)
+        data = {'technique': T_DISTINCT, 'callback': ""}
+        data['table'] = (f, "sample.csv")
+        result = self.app.post('/spot', data=data, content_type='multipart/form-data')
+        self.assertEqual(result.status_code, 200, msg=result.data)
+        self.assertTrue(result.is_json)
+        j = result.get_json()
+        self.assertEqual(j["subject_col_id"], 3)
 
 
 if __name__ == '__main__':

@@ -7,10 +7,10 @@ UPLOAD_DIR = "local_uploads"
 
 T_LEFT_MOST = "left_most"
 T_NON_NUM = "left_most_non-numeric"
+T_DISTINCT = "most_distinct"
+
 
 # The below two functions are copied from oeg-upm/ttla
-
-
 def get_numerics_from_list(nums_str_list):
     """
     :param nums_str_list: list of string or numbers or a mix
@@ -56,11 +56,13 @@ def spot_subject_column(fname, technique):
         col_id = left_most(df)
     elif technique == T_NON_NUM:
         col_id = left_most_non_numeric(df)
+    elif technique == T_DISTINCT:
+        col_id = most_distinct(df)
     os.remove(fdir)
     return col_id
 
 
-def left_most(fdir):
+def left_most(df):
     return 0
 
 
@@ -77,6 +79,34 @@ def left_most_non_numeric(df):
         if nums is None:
             return idx
     return -1
+
+
+def most_distinct(df):
+    """
+    :param df: data frame
+    :return:
+    """
+    headers = df.columns.values
+    dist_list = []  # list of distinct values per list
+    for idx, col_name in enumerate(headers):
+        col = df[col_name]
+        col_list = col.tolist()
+        avg_token_size = sum([len(str(a)) for a in col_list]) * 1.0 / len(col_list)
+        if avg_token_size < 4:
+            dist_list.append(-1)
+        else:
+            nums = get_numerics_from_list(col_list)
+            if nums is None:
+                dist_list.append(len(set(col_list)))
+            else:
+                dist_list.append(-1)
+
+    max_num = max(dist_list)
+    if max_num == -1 or max_num == 0:
+        return -1
+    for i, c in enumerate(dist_list):
+        if c == max_num:
+            return i
 
 
 if __name__ == "__main__":
