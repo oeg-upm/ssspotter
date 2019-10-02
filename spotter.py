@@ -109,16 +109,21 @@ def most_distinct(df):
             return i
 
 
+def workflow(tname, fname, technique, callback_url, slice_idx, total):
+    col_id = spot_subject_column(fname=fname, technique=technique)
+    data = {
+        "subject_col_id": col_id,
+        "slice": int(slice_idx),
+        "total": int(total),
+        "table": tname,
+    }
+    r = requests.post(callback_url, data=data)
+    print("callback: %s, status: %d" % (callback_url, r.status_code))
+    return col_id
+
+
 if __name__ == "__main__":
     print(len(sys.argv))
     if len(sys.argv) == 7:
         _, tname, fname, technique, callback_url, slice_idx, total = sys.argv
-        col_id = spot_subject_column(fname=fname, technique=technique)
-        data = {
-            "subject_col_id": col_id,
-            "slice": int(slice_idx),
-            "total": int(total),
-            "table": tname,
-        }
-        r = requests.post(callback_url, data=data)
-        print("callback: %s, status: %d" % (callback_url, r.status_code))
+        workflow(tname, fname, technique, callback_url, slice_idx, total)

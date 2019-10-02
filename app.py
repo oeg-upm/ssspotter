@@ -8,8 +8,7 @@ import string
 import subprocess
 import logging
 
-from spotter import spot_subject_column
-
+from spotter import spot_subject_column, workflow
 
 logger = logging.getLogger(__name__)
 app = Flask(__name__)
@@ -44,20 +43,26 @@ def spot():
         else:
             ext = ".csv"
         tname = uploaded_file.filename
-        fname = get_random()+ext
+        fname = get_random() + ext
         uploaded_file.save(os.path.join('local_uploads', fname))
-        if callback_url.strip()=="":
+
+        if callback_url.strip() == "":
             col_id = spot_subject_column(fname=fname, technique=technique)
             return jsonify(subject_col_id=col_id)
+
         else:
             python_exec = ".venv/bin/python"
             if not os.path.exists(python_exec):
                 python_exec = "python"
-            comm = """ %s spotter.py "%s" "%s" "%s" "%s" "%d" "%d" """ % (python_exec, tname, fname, technique, callback_url, slice_idx,
-                                                                total)
-            print("comm: "+comm)
-            subprocess.Popen(comm, shell=True)
-            return jsonify(msg="In progress, the callback url will be called once the subject column is identified")
+            comm = """ %s spotter.py "%s" "%s" "%s" "%s" "%d" "%d" """ % (python_exec, tname, fname, technique,
+                                                                          callback_url, slice_idx, total)
+            logger.info("comm: " + comm)
+            if 'sync' in request.form:
+                col_id = workflow(tname, fname, technique, callback_url, slice_idx, total)
+                return jsonify(subject_col_id=col_id)
+            else:
+                subprocess.Popen(comm, shell=True)
+                return jsonify(msg="In progress, the callback url will be called once the subject column is identified")
 
 
 if __name__ == '__main__':
@@ -65,9 +70,3 @@ if __name__ == '__main__':
         app.run(debug=True, host='0.0.0.0', port=int(os.environ['port']))
     else:
         app.run(debug=True, host='0.0.0.0')
-
-
-
-
-
-
