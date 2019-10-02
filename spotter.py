@@ -51,8 +51,13 @@ def spot_subject_column(fname, technique):
         sep = "\t"
     else:
         sep = ","
-    df = pd.read_csv(fdir, sep=sep)
-    if technique == T_LEFT_MOST:
+    f = open(fdir)
+    if f.read().strip() == "":
+        return -1
+    df = pd.read_csv(fdir, sep=sep, header=None)
+    if df.shape[0] == 0:
+        col_id = -1
+    elif technique == T_LEFT_MOST:
         col_id = left_most(df)
     elif technique == T_NON_NUM:
         col_id = left_most_non_numeric(df)
@@ -91,6 +96,9 @@ def most_distinct(df):
     for idx, col_name in enumerate(headers):
         col = df[col_name]
         col_list = col.tolist()
+        # if len(col_list) == 0:
+        #     dist_list.append(-1)
+        #     continue
         avg_token_size = sum([len(str(a)) for a in col_list]) * 1.0 / len(col_list)
         if avg_token_size < 4:
             dist_list.append(-1)

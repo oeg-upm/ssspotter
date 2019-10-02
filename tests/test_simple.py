@@ -119,6 +119,30 @@ class TestSimpleSpotter(unittest.TestCase):
         j = result.get_json()
         self.assertEqual(j["subject_col_id"], 3)
 
+    def test_distinct_empty(self):
+        fname = "sample_col_empty.csv"
+        fdir = os.path.join("tests", fname)
+        f = open(fdir)
+        data = {'technique': T_DISTINCT, 'callback': ""}
+        data['table'] = (f, "sample.csv")
+        result = self.app.post('/spot', data=data, content_type='multipart/form-data')
+        self.assertEqual(result.status_code, 200, msg=result.data)
+        self.assertTrue(result.is_json)
+        j = result.get_json()
+        self.assertEqual(j["subject_col_id"], -1)
+
+    def test_distinct_nodata(self):
+        fname = "sample_col_nodata.csv"
+        fdir = os.path.join("tests", fname)
+        f = open(fdir)
+        data = {'technique': T_DISTINCT, 'callback': ""}
+        data['table'] = (f, "sample.csv")
+        result = self.app.post('/spot', data=data, content_type='multipart/form-data')
+        self.assertEqual(result.status_code, 200, msg=result.data)
+        self.assertTrue(result.is_json)
+        j = result.get_json()
+        self.assertEqual(j["subject_col_id"], -1)
+
 
 if __name__ == '__main__':
     unittest.main()
